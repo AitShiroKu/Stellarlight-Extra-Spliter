@@ -1,4 +1,6 @@
-# ⛏️ Minecraft Mod Splitter
+<img width="400" height="399" alt="Stellarlight Extra Splitter logo (1)" src="https://github.com/user-attachments/assets/96a7a332-17ed-404b-ae45-3260749aedbf" />
+
+# ⛏️ Stellarlight Extra Splitter | A Minecraft Mod Splitter
 
 **Minecraft Mod Splitter** is a powerful, high-performance tool designed to automatically categorize and sort Minecraft mod files (`.jar`) based on metadata fetched from the **Modrinth API**.
 
@@ -88,4 +90,4 @@ Binaries will be located in the `dist/` folder.
 Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ---
-*Created with ❤️ by Zakura*
+*Created with ❤️ by AitShiroKu*
