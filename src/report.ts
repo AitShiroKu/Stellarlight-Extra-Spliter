@@ -101,7 +101,7 @@ export async function saveMarkdownReport(
   const filePath = join(resolve(outputPath), "report.md");
   const lines: string[] = [];
 
-  lines.push("# 🎮 Minecraft Mod Splitter Report");
+  lines.push("✨ Stellalright Extra Splitter Report📄")
   lines.push("");
   lines.push(`📅 **Generated:** ${new Date(report.timestamp).toLocaleString()}`);
   lines.push(`⏱️ **Duration:** ${(report.duration / 1000).toFixed(1)}s`);
