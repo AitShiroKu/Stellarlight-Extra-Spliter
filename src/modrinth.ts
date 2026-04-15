@@ -1,7 +1,7 @@
 import type { ModrinthVersion, ModrinthProject, ProgressCallback } from "./types";
 
 const BASE_URL = "https://api.modrinth.com/v2";
-const USER_AGENT = "MinecraftModSplitter/1.0.0 (github.com/zakura)";
+const USER_AGENT = "Stellarlight-Extra-Spliter/1.0.0 (github.com/aitshiroku)";
 const MAX_PROJECTS_PER_REQUEST = 80; // Modrinth recommends under 100
 
 /**
