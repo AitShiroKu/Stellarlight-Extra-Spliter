@@ -6,7 +6,11 @@
 
 Whether you're managing a server and need to separate client-only mods, or you're a player wanting to organize your library, this tool handles the heavy lifting by scanning file hashes and classifying them into logical folders.
 
-![Web UI Preview](https://raw.githubusercontent.com/zakura-online/minecraft-mod-splitter/main/screenshots/ui_preview.png) *(Placeholder if not uploaded)*
+## Web UI Preview
+<img width="1753" height="885" alt="image" src="https://github.com/user-attachments/assets/370f01a0-6d30-4ad4-ba23-7031441ec1c1" />
+<img width="1753" height="1078" alt="image" src="https://github.com/user-attachments/assets/8e53a064-6767-43bd-8f55-56c04df1f667" />
+
+
 
 ## ✨ Features
 
