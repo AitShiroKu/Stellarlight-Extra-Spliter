@@ -44,7 +44,7 @@ const CATEGORY_CLI_COLORS: Record<ModCategory, string> = {
 function printBanner() {
   console.log(`
 ${c.cyan}${c.bold}  ╔══════════════════════════════════════════════╗
-  ║     ⛏️  Minecraft Mod Splitter v1.0.0  ⛏️     ║
+  ║     ✨  Stellarlight Extra Spliter v1.0.0  ⛏️     ║
   ║     Classify mods using Modrinth API        ║
   ╚══════════════════════════════════════════════╝${c.reset}
 `);
