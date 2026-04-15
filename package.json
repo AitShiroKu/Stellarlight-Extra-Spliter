@@ -1,0 +1,15 @@
+{
+  "name": "minecraft-mod-splitter",
+  "version": "1.0.0",
+  "description": "Classify and split Minecraft mods into Client-Side, Server-Side, Library, and Gameplay categories using Modrinth API",
+  "type": "module",
+  "scripts": {
+    "split": "bun run src/cli.ts",
+    "ui": "bun run src/ui/server.ts",
+    "build": "bun build ./src/cli.ts ./src/ui/server.ts --outdir ./dist --target bun",
+    "compile:cli": "bun build ./src/cli.ts --compile --outfile ./dist/mod-splitter",
+    "compile:ui": "bun build ./src/ui/server.ts --compile --outfile ./dist/mod-splitter-ui"
+  },
+  "author": "Zakura",
+  "license": "MIT"
+}

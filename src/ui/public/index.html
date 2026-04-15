@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Classify and split Minecraft mods by type using Modrinth API">
+  <title>Stellarlight Extra Splitter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Background particles -->
+  <div class="bg-particles" id="particles"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-content">
+      <div class="logo">
+        <img src="/logo.png" alt="Logo" class="logo-icon" style="width: 2.5rem; height: 2.5rem; object-fit: contain;">
+        <div>
+          <h1>Stellarlight Extra Splitter</h1>
+          <p class="subtitle">Classify Minecraft mods with Modrinth API</p>
+        </div>
+      </div>
+      <div class="header-badge">
+        <span class="badge-dot"></span>
+        <span id="connectionStatus">Disconnected</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="app-main">
+    <!-- Config Card -->
+    <section class="card config-card" id="configSection">
+      <div class="card-header">
+        <h2>📁 Configuration</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="inputPath">Input Folder (mods directory)</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📂</span>
+              <input type="text" id="inputPath" placeholder="/path/to/.minecraft/mods" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="outputPath">Output Folder</label>
+            <div class="input-wrapper">
+              <span class="input-icon">📁</span>
+              <input type="text" id="outputPath" placeholder="/path/to/sorted-mods" autocomplete="off">
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group form-group-sm">
+            <label for="concurrency">Concurrency</label>
+            <input type="number" id="concurrency" value="10" min="1" max="50">
+          </div>
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="dryRun">
+              <span class="checkbox-custom"></span>
+              Dry Run (analyze only, don't copy)
+            </label>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button id="btnSplit" class="btn btn-primary">
+            <span class="btn-icon">🚀</span>
+            <span>Start Splitting</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Progress Card -->
+    <section class="card progress-card hidden" id="progressSection">
+      <div class="card-header">
+        <h2>⏳ Progress</h2>
+        <span class="progress-pct" id="progressPct">0%</span>
+      </div>
+      <div class="card-body">
+        <div class="progress-bar-track">
+          <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <p class="progress-message" id="progressMessage">Starting...</p>
+        <div class="progress-stages">
+          <div class="stage" id="stage-scanning" data-label="Scan">🔍</div>
+          <div class="stage-line"></div>
+          <div class="stage" id="stage-hashing" data-label="Hash">🔑</div>
+          <div class="stage-line"></div>
+          <div class="stage" id="stage-lookup" data-label="Lookup">🌐</div>
+          <div class="stage-line"></div>
+          <div class="stage" id="stage-classifying" data-label="Classify">🏷️</div>
+          <div class="stage-line"></div>
+          <div class="stage" id="stage-copying" data-label="Copy">📁</div>
+          <div class="stage-line"></div>
+          <div class="stage" id="stage-done" data-label="Done">✅</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <div class="results-grid hidden" id="resultsSection">
+      <!-- Summary Cards -->
+      <section class="card summary-card client-side-card">
+        <div class="summary-icon">🖥️</div>
+        <div class="summary-count" id="countClientSide">0</div>
+        <div class="summary-label">Client-Side</div>
+      </section>
+      <section class="card summary-card server-side-card">
+        <div class="summary-icon">🖧</div>
+        <div class="summary-count" id="countServerSide">0</div>
+        <div class="summary-label">Server-Side</div>
+      </section>
+      <section class="card summary-card library-card">
+        <div class="summary-icon">📚</div>
+        <div class="summary-count" id="countLibrary">0</div>
+        <div class="summary-label">Library</div>
+      </section>
+      <section class="card summary-card gameplay-card">
+        <div class="summary-icon">🎮</div>
+        <div class="summary-count" id="countGameplay">0</div>
+        <div class="summary-label">Gameplay</div>
+      </section>
+      <section class="card summary-card unknown-card">
+        <div class="summary-icon">❓</div>
+        <div class="summary-count" id="countUnknown">0</div>
+        <div class="summary-label">Unknown</div>
+      </section>
+    </div>
+
+    <!-- Chart & Info -->
+    <div class="charts-grid hidden" id="chartsSection">
+      <section class="card chart-card">
+        <div class="card-header">
+          <h2>📊 Distribution</h2>
+        </div>
+        <div class="card-body">
+          <canvas id="pieChart" width="300" height="300"></canvas>
+        </div>
+      </section>
+      <section class="card info-card">
+        <div class="card-header">
+          <h2>ℹ️ Details</h2>
+        </div>
+        <div class="card-body">
+          <div class="info-row">
+            <span class="info-label">Total Mods</span>
+            <span class="info-value" id="infoTotal">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Duration</span>
+            <span class="info-value" id="infoDuration">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Loaders</span>
+            <span class="info-value" id="infoLoaders">—</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Game Versions</span>
+            <span class="info-value" id="infoVersions">—</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Mod List Table -->
+    <section class="card table-card hidden" id="tableSection">
+      <div class="card-header">
+        <h2>📦 Mod List</h2>
+        <div class="table-controls">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchInput" placeholder="Search mods..." autocomplete="off">
+          </div>
+          <select id="filterCategory">
+            <option value="all">All Categories</option>
+            <option value="client-side">🖥️ Client-Side</option>
+            <option value="server-side">🖧 Server-Side</option>
+            <option value="library">📚 Library</option>
+            <option value="gameplay">🎮 Gameplay</option>
+            <option value="unknown">❓ Unknown</option>
+          </select>
+        </div>
+      </div>
+      <div class="card-body table-scroll">
+        <table id="modTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Mod</th>
+              <th>Category</th>
+              <th>Size</th>
+              <th>Loaders</th>
+              <th>Link</th>
+            </tr>
+          </thead>
+          <tbody id="modTableBody">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <p>Stellarlight Extra Splitter v1.0.0 — Powered by <a href="https://modrinth.com" target="_blank">Modrinth API</a></p>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>
